@@ -43,14 +43,21 @@ function updateErrors()
         //blank content
         if (!$_SESSION['user'][$id]['content'])
         {
-            $_SESSION['user'][$id]['error'] .= '*required';
+            $_SESSION['user'][$id]['error'] .= '*required<br>';
         }
         else
         {
-            $_SESSION['user'][$id]['error'] = str_replace('*required', '', $_SESSION['user'][$id]['error']);
+            $_SESSION['user'][$id]['error'] = str_replace('*required<br>', '', $_SESSION['user'][$id]['error']);
         }
 
-
+        if (!checkValid($_SESSION['user'][$id]['content'], $_SESSION['user'][$id]['type']))
+        {
+            $_SESSION['user'][$id]['error'] .= '*invalid<br>';
+        }
+        else
+        {
+            $_SESSION['user'][$id]['error'] = str_replace('*invalid<br>', '', $_SESSION['user'][$id]['error']);
+        }
     }
 }
 
@@ -60,4 +67,29 @@ enum Type
     case NumberInt;
     case NumberStr;
     case Password;
+    case Email;
+}
+
+function checkValid($val, Type $type)
+{
+    switch ($type) 
+    {
+        case Type::Name:
+            return preg_match("/^[a-zA-Z-' ]*$/", $val);
+
+        case Type::Email:
+            return filter_var($val, FILTER_VALIDATE_EMAIL);
+
+        case Type::NumberInt:
+            return preg_match("/^[0][9][0-9]{9}$/", $val);
+        
+        case Type::NumberStr:
+            return true;
+            
+        case Type::Password:
+            return true;
+
+        default:
+            return true;
+    }
 }
