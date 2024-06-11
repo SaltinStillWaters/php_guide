@@ -1,39 +1,33 @@
 <?php 
-require_once('backend.php');
+require_once('backend/input.php');
+require_once('backend/type.php');   
 ?>
 
 
 <body>
 
 <?php
-
-session_start();
-if (!isset($_SESSION['user']))
-{
-    $_SESSION['user'] = array(
-        /* FORMAT: 
-        *   'id' => [content => 'content', error => 'error', type => 'type', required => 'required']
-        *   'id2'...
-        *   'passed' => bool
-        */
-    'passed' => false
-    );
-}
-
+Input::startSession();
 if (isset($_POST['submit'])) 
 {
-    updateContents();
-    updateErrors();
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit();
+    Input::cleanUp();
 }
 
-    
+if (isset($_POST['refresh'])) 
+{
+    unset($_SESSION['user']);
+}
 ?>
 
 <form method = 'post'>    
-    <?php input('name', Type::Name, 'Name:', required:true); ?>
+    <?php 
+        Input::input('name', Type::Name, 'Name:', required:true, placeholder:'e.g. Shandong'); 
+        Input::input('email', Type::Email, 'Email:', required:true, placeholder:'e.g. ss@gmail.com'); 
+            
+    ?>
 
     <input type="submit" name="submit" value="Submit">
+    <input type="submit" name="refresh" value="Refresh">
 </form>
+
 </body>
