@@ -1,4 +1,5 @@
 <?php
+
 function input($id, $type, $label='', $placeholder='', $required = false)
 {
     addSession($id, $type, $required);
@@ -17,7 +18,9 @@ function input($id, $type, $label='', $placeholder='', $required = false)
 function addSession(string $id, Type $type, bool $required=false)
 {
     if (isset($_SESSION['user'][$id]))
+    {
         return;
+    }
     
     $_SESSION['user'][$id] = ['content' => '', 'error' => '', 'type' => $type, 'required' => $required];
 }
@@ -43,20 +46,25 @@ function updateErrors()
         //blank content
         if (!$_SESSION['user'][$id]['content'])
         {
-            $_SESSION['user'][$id]['error'] .= '*required<br>';
+            if (!str_contains($_SESSION['user'][$id]['error'], '*required<br>'))
+                $_SESSION['user'][$id]['error'] .= '*required<br>';
         }
         else
         {
             $_SESSION['user'][$id]['error'] = str_replace('*required<br>', '', $_SESSION['user'][$id]['error']);
         }
 
-        if (!checkValid($_SESSION['user'][$id]['content'], $_SESSION['user'][$id]['type']))
+        //wrong or invalid content
+        $type = $_SESSION['user'][$id]['type'];
+
+        if (!checkValid($_SESSION['user'][$id]['content'], $type))
         {
-            $_SESSION['user'][$id]['error'] .= '*invalid<br>';
+            if (!str_contains($_SESSION['user'][$id]['error'], Type::errMsg($type) . '<br>'))
+                $_SESSION['user'][$id]['error'] .= Type::errMsg($type) . '<br>';
         }
         else
         {
-            $_SESSION['user'][$id]['error'] = str_replace('*invalid<br>', '', $_SESSION['user'][$id]['error']);
+            $_SESSION['user'][$id]['error'] = str_replace(Type::errMsg($type) . '<br>', '', $_SESSION['user'][$id]['error']);
         }
     }
 }
@@ -64,10 +72,22 @@ function updateErrors()
 enum Type
 {
     case Name;
-    case NumberInt;
+    case PhoneNumber;
     case NumberStr;
     case Password;
     case Email;
+
+    public static function errMsg($type) : string
+    {
+        return match($type)
+        {
+            Type::Name => '*Must only contain letters',
+            Type::PhoneNumber => '*Not a valid phone number',
+            Type::Email => '*Not a valid email',
+            Type::NumberStr => '',
+            Type::Password => '',
+        };
+    }
 }
 
 function checkValid($val, Type $type)
@@ -80,13 +100,15 @@ function checkValid($val, Type $type)
         case Type::Email:
             return filter_var($val, FILTER_VALIDATE_EMAIL);
 
-        case Type::NumberInt:
+        case Type::PhoneNumber:
             return preg_match("/^[0][9][0-9]{9}$/", $val);
         
         case Type::NumberStr:
+            //not yet implemented
             return true;
             
         case Type::Password:
+            //not yet implemented
             return true;
 
         default:

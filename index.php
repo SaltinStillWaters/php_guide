@@ -2,13 +2,6 @@
 require_once('backend.php');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
 <body>
 
@@ -34,6 +27,8 @@ if (isset($_POST['submit']))
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit();
 }
+
+    
 ?>
 
 <form method = 'post'>    
@@ -42,4 +37,3 @@ if (isset($_POST['submit']))
     <input type="submit" name="submit" value="Submit">
 </form>
 </body>
-</html> 
