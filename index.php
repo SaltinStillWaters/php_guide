@@ -8,9 +8,15 @@ require_once('backend/type.php');
 
 <?php
 Input::startSession();
+
 if (isset($_POST['submit'])) 
 {
-    Input::cleanUp();
+    Input::cleanUp();   
+    
+    if (!Input::hasError())
+    {
+        header("Location: " . 'welcome.php');
+    }
 }
 
 if (isset($_POST['refresh'])) 
@@ -22,8 +28,7 @@ if (isset($_POST['refresh']))
 <form method = 'post'>    
     <?php 
         Input::input('name', Type::Name, 'Name:', required:true, placeholder:'e.g. Shandong'); 
-        Input::input('email', Type::Email, 'Email:', required:true, placeholder:'e.g. ss@gmail.com'); 
-            
+        Input::input('email', Type::Email, 'Email:', required:true, placeholder:'e.g. ss@gmail.com');
     ?>
 
     <input type="submit" name="submit" value="Submit">

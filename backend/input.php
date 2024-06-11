@@ -3,6 +3,24 @@ require_once('type.php');
 
 class Input
 {
+    public static function hasError() : bool
+    {
+        foreach ($_SESSION['user'] as $id => $key)
+        {
+            if ($id == 'submit' || $id == 'refresh')
+            {
+                continue;
+            }
+
+            if ($key['error'] != '')
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
     public static function startSession()
     {
         session_start();
