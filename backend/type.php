@@ -26,7 +26,6 @@ enum Type
                 return preg_match("/^[a-zA-Z-' ]*$/", $val);
 
             case Type::Email:
-                var_dump($_SESSION['user']);
                 return filter_var($val, FILTER_VALIDATE_EMAIL);
 
             case Type::PhoneNumber:

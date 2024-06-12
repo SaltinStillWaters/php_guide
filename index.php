@@ -1,6 +1,13 @@
 <?php 
+if (!session_id()) session_start();
+
+
 require_once('backend/input.php');
 require_once('backend/type.php');   
+require_once('page_controller.php');
+
+PageController::init(true);
+var_dump($_SESSION['pages']);
 ?>
 
 
@@ -8,13 +15,14 @@ require_once('backend/type.php');
 
 <?php
 Input::startSession();
-
 if (isset($_POST['submit'])) 
 {
     Input::cleanUp();   
-    
+
     if (!Input::hasError())
     {
+        var_dump($_SESSION['pages']);
+        PageController::setCanAccess(false, 'welcome.php');
         header("Location: " . 'welcome.php');
     }
 }
@@ -22,7 +30,9 @@ if (isset($_POST['submit']))
 if (isset($_POST['refresh'])) 
 {
     unset($_SESSION['user']);
+    unset($_SESSION['pages']);
 }
+
 ?>
 
 <form method = 'post'>    

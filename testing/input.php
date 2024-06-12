@@ -40,8 +40,8 @@ class Input
     {
         Input::updateContents();
         Input::updateErrors();
+        header("Location: " . $_SERVER['REQUEST_URI']);
     }
-    
     public static function input($id, $type, $label='', $placeholder='', $required = false)
     {
         Input::addSession($id, $type, $required);
