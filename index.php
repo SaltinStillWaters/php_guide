@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION = [];
+//$_SESSION['HELLO'] = ['WORLD'];
 
 header('Location: login.php');
 exit();

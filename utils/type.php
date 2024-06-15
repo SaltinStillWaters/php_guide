@@ -1,41 +1,46 @@
 <?php
-enum Type
+/**
+ * This class contains static members that specify ALL the available input types of the user
+ * It also contains methods that validate and sanitize each input type
+ * In other words, all code injection and XSS attacks will be prevented by this class, granted that all input is taken through form.php
+ */
+class Type
 {
-    case Name;
-    case PhoneNumber;
-    case NumberStr;
-    case Password;
-    case Email;
-
+    public static $Name = 'Name';
+    public static $PhoneNumber = 'PhoneNumber';
+    public static $NumberStr = 'NumberStr';
+    public static $Password = 'Password';
+    public static $Email = 'Email';
+    
     public static function errMsg($type) : string
     {
         return match($type)
         {
-            Type::Email => '*Not a valid email',
-            Type::Name => '*Must only contain letters',
-            Type::PhoneNumber => '*Not a valid phone number',
-            Type::NumberStr => '',
-            Type::Password => '',
+            self::$Email => '*Not a valid email',
+            self::$Name => '*Must only contain letters',
+            self::$PhoneNumber => '*Not a valid phone number',
+            self::$NumberStr => '',
+            self::$Password => '',
         };
     }
-    public static function checkValid($val, Type $type)
+    public static function checkValid($val, string $type)
     {
         switch ($type) 
         {
-            case Type::Name:
+            case self::$Name:
                 return preg_match("/^[a-zA-Z-' ]*$/", $val);
 
-            case Type::Email:
+            case self::$Email:
                 return filter_var($val, FILTER_VALIDATE_EMAIL);
 
-            case Type::PhoneNumber:
+            case self::$PhoneNumber:
                 return preg_match("/^[0][9][0-9]{9}$/", $val);
             
-            case Type::NumberStr:
+            case self::$NumberStr:
                 //not yet implemented
                 return true;
                 
-            case Type::Password:
+            case self::$Password:
                 //not yet implemented
                 return true;
 

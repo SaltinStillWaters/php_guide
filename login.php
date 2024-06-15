@@ -1,17 +1,43 @@
 <?php
-@session_start();
-require_once('page_controller.php');
+session_start();
+require_once('utils/type.php');
+require_once('utils/form.php');
+require_once('utils/page_controller.php');
 
-PageController::init(true);
+Form::init();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
-    var_dump($_SESSION);
-    PageController::setCanAccess(true, 'homepage.php');
-    header('Location: homepage.php');
+    if (isset($_POST['submit']))
+    {
+        Form::updateContents();
+        Form::updateErrors();
+
+        if (!Form::hasError())
+        {
+            PageController::setCanAccess(true, 'homepage.php');
+            header("Location: homepage.php");
+            exit();
+        }
+    }
+    
+    if (isset($_POST['refresh']))
+    {
+        $_SESSION = [];
+    }
 }
 ?>
 
 <form method="post">
-    <input type="submit" value="Submit">
+    <?php
+    Form::input('name', Type::$Name, 'Name: ', 'e.g. Mychal', true);
+    
+    Form::input('number', Type::$PhoneNumber, 'Phone Number: ', 'e.g. 09554813800', true);
+    ?>
+    <input type="submit" value="Submit" name="submit">
+    <input type="submit" value="Refresh" name="refresh">
+    
 </form>
+
+<?php
+?>
