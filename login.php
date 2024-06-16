@@ -3,6 +3,7 @@ session_start();
 require_once('utils/type.php');
 require_once('utils/form.php');
 require_once('utils/page_controller.php');
+require_once('database.php');
 
 Form::init();
 
@@ -15,6 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
         if (!Form::hasError())
         {
+            $conn = Database::establishConnection();
+            $ids = ['name', 'number'];
+            Form::insertToDB('user', $ids, [1, 1], $conn);
+
+            Form::clearSession();
+            
             PageController::setCanAccess(true, 'homepage.php');
             header("Location: homepage.php");
             exit();

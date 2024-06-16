@@ -23,7 +23,7 @@ class Form
      * The key to access form session variables.
      * E.g.: $_SESSION[$SESSION_NAME];
      */
-    private static $SESSION_NAME = 'user';
+    public static $SESSION_NAME = 'user';
     
     /**
      * Called at the start before any functions from class Form is called.
@@ -36,9 +36,17 @@ class Form
             $_SESSION[self::$SESSION_NAME] = [];
         }
     }
-    
 
-    public static function input($id, $type, $label='', $placeholder='', $required = false)
+    /**
+     * Generates an input textbox
+     * 
+     * @param string $id the id to assign to the input
+     * @param string $type the type of input as defined by type.php
+     * @param string $label the text to display above the textbox
+     * @param string $placeholder the placeholder to display
+     * @param bool $required specifies if input is required
+     */
+    public static function input(string $id, string $type, string $label='', string $placeholder='', bool $required = false)
     {
         self::addSession($id, $type, $required);
     
@@ -56,7 +64,44 @@ class Form
     
         echo "<br>";
     }
+    public static function insertToDB($tableName, $ids, $isStrings, $conn)
+    {
+        if (self::hasError())
+        {
+            echo '<br>User input has errors<br>';
+            return false;
+        }
 
+        $sql = "insert into $tableName 
+                values(0, ";
+
+        for ($x = 0; $x < count($ids); ++$x)
+        {
+            $temp = $_SESSION[self::$SESSION_NAME][$ids[$x]]['content'];
+            if ($isStrings[$x])
+            {
+                $temp = "'$temp'";
+            }
+
+            $sql .= $temp;
+            if ($x + 1 < count($ids))
+            {
+                $sql .= ", ";
+            }
+        }
+        $sql .= ");";
+
+        $result = mysqli_query($conn, $sql);
+        mysqli_close($conn);
+
+        return $result;
+    }
+    
+    /**
+     * Iterates through the inputs and checks if there are errors.
+     * 
+     * @return bool returns true if there are errors, otherwise, returns false
+     */
     public static function hasError() : bool
     {
         foreach ($_SESSION[self::$SESSION_NAME] as $id => $key)
@@ -75,6 +120,10 @@ class Form
         return false;
     }
 
+    /**
+     * Updates the contents in the the appropriate session variables.
+     * Must be called before input()
+     */
     public static function updateContents()
     {
         foreach ($_POST as $id => $content)
@@ -91,6 +140,10 @@ class Form
         }
     }
     
+    /**
+     * Updates the error in the appropriate session variables
+     * Must be called before input()
+     */
     public static function updateErrors()
     {
         foreach ($_SESSION[self::$SESSION_NAME] as $id => $key)
@@ -136,6 +189,17 @@ class Form
             $_SESSION[self::$SESSION_NAME][$id]['error'] = $key['error'];
         }
     }
+    /**
+     * Unsets the Session variables associated to the input
+     */
+    public static function clearSession()
+    {
+        unset($_SESSION[self::$SESSION_NAME]);
+    }
+
+    /**
+     * Used by inptu() to add a session variable if it is not yet set
+     */
     private static function addSession(string $id, string $type, bool $required=false)
     {
         if (isset($_SESSION[self::$SESSION_NAME][$id]))

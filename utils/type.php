@@ -37,8 +37,7 @@ class Type
                 return preg_match("/^[0][9][0-9]{9}$/", $val);
             
             case self::$NumberStr:
-                //not yet implemented
-                return true;
+                return preg_match("/^[0-9]*$/", $val);
                 
             case self::$Password:
                 //not yet implemented
