@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 ?>
 
 <form method="post">
-    <input type="date" name="date">
+    <input type="radio" id="male" name="gender" value="Male">
+    <input type="radio" id="female" name="gender" value="Female">
     <input type="submit" value="submit">
 </form>

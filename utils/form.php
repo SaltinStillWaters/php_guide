@@ -45,12 +45,13 @@ class Form
      * @param string $label the text to display above the textbox
      * @param string $placeholder the placeholder to display
      * @param bool $required specifies if input is required
+     * @param string $colSpan specifies how many columns input should take. Leave blank to make it flexible
      */
-    public static function inputText(string $id, string $type, string $label='', string $placeholder='', bool $required = false)
+    public static function inputText(string $id, string $type, string $label='', string $placeholder='', bool $required = false, string $colSpan='')
     {
         self::addSession($id, $type, $required);
     
-        echo "<div class='col'>";
+        echo ($colSpan === "") ? "<div class='col'>" : "<div class='col-$colSpan'>";
 
         if (!empty($label))
         {
@@ -59,6 +60,29 @@ class Form
     
         echo "<input class='form-control' type='text' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}' placeholder='{$placeholder}'>";
     
+        if($required)
+        {
+            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
+        }
+
+        echo "</div>";
+    }
+    
+    public static function inputCheckBox(string $id, string $label='', bool $required = false)
+    {
+        self::addSession($id, Type::$Text, $required);
+        $_SESSION[self::$SESSION_NAME][$id]['content'] = "";
+
+        echo "<div class='col'>";
+
+        if (!empty($label))
+        {
+            echo "<label for='{$id}'> {$label} </label> <br>";
+        }
+
+        echo "<input type='checkbox' id='{$id}' name='{$id}' value='{$id}'>";
+        echo "<label for='$id'>&nbsp;I agree to the terms and conditions</label><br>";
+        
         if($required)
         {
             echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
@@ -79,6 +103,87 @@ class Form
     
         echo "<input class='form-control' type='date' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}'>";
     
+        if($required)
+        {
+            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
+        }
+
+        echo "</div>";
+    }
+    public static function inputRadio(string $id, array $options, string $label='', bool $required = false)
+    {
+        self::addSession($id, Type::$Text, $required);
+        
+        echo "<div class='col'>";
+
+        if (!empty($label))
+        {
+            echo "<label for='{$id}'> {$label} </label> <br>";
+        }
+        
+        $default = isset($_SESSION[self::$SESSION_NAME][$id]['content']) ? $_SESSION[self::$SESSION_NAME][$id]['content'] : "";
+        
+        foreach ($options as $x)
+        {
+            echo "<input type='radio' name='$id' id='$x' value='$x'";
+            if ($default === $x)
+            {
+                echo " checked>";
+            }
+            else
+            {
+                echo ">";
+            }
+
+            echo "<label for='$x'>" . strtoupper($x) . "</label>&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+        echo '<br>';
+        if($required)
+        {
+            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
+        }
+
+        echo "</div>";
+    }
+    public static function inputDropDown(string $id, array $options, string $label='', bool $required = false)
+    {
+        self::addSession($id, Type::$Text, $required);
+        
+        echo "<div class='col'>";
+
+        if (!empty($label))
+        {
+            echo "<label for='{$id}'> {$label} </label> <br>";
+        }
+    
+        echo "<select class='form-control' name='$id', id='$id'>";
+        
+        $default = isset($_SESSION[self::$SESSION_NAME][$id]['content']) ? $_SESSION[self::$SESSION_NAME][$id]['content'] : "";
+        
+        foreach ($options as $x)
+        {
+            echo "<option value='$x'";
+
+            if ($default === $x)
+            {
+                echo " selected";
+            }
+
+            if ($x === "")
+            {
+                echo " hidden disabled>Select Country";
+            }
+            else
+            {
+                echo ">$x";
+            }
+
+            echo "</option> <br>";
+
+        }
+
+        echo "</select>";
+
         if($required)
         {
             echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";

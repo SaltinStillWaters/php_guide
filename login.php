@@ -4,6 +4,7 @@ require_once('utils/type.php');
 require_once('utils/form.php');
 require_once('utils/page_controller.php');
 require_once('db/database.php');
+require_once('misc/misc.php');
 ?>
 
 <head>
@@ -47,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <div class="row">
     <?php
     Form::inputText('firstName', Type::$Name, 'First Name: ', 'e.g. Mychal', true);
-    Form::inputText('middleName', Type::$Name, 'Middle Name: ', 'e.g. Bacus', true);
+    Form::inputText('middleName', Type::$Name, 'Middle Name: ', 'e.g. Bacus');
     Form::inputText('lastName', Type::$Name, 'Last Name: ', 'e.g. Pejana', true);
     ?>
     </div>
@@ -61,8 +62,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
     <div class="row">
     <?php
-    Form::inputText('buildingInfo', Type::$Text, 'Building Info: ', 'Unit No. / House No. / Blg. Name', true);
-    Form::inputText('address', Type::$Text, 'Address: ', 'Street / Village / Subdivision', true);
+    Form::inputText('unitNumber', Type::$NumberStr, 'Unit No.: ', 'e.g. 99', false, '2');
+    Form::inputText('houseNumber', Type::$NumberStr, 'House No.: ', 'e.g. 149', true, '2');
+    Form::inputText('street', Type::$Text, 'Street: ', 'e.g. Panacea St.', true);
+    Form::inputText('village', Type::$Text, 'Village: ', 'e.g. Strife Vill.', true);
+    ?>
+    </div>
+
+    <div class="row">
+    <?php
+    Form::inputText('subdivision', Type::$Text, 'Subdivision: ', 'e.g. Goryeo', true);
+    Form::inputText('zipCode', Type::$NumberStr, 'Zip Code: ', 'e.g. 1608', true);
+    Form::inputDropDown('country', Misc::$countries, 'Country: ', true);
+    ?>
+    </div>
+
+    <div class="row">
+    <?php
+    Form::inputText('mobileNumber', Type::$PhoneNumber, 'Mobile Number: ', 'e.g. 09554813900', true);
+    Form::inputRadio('gender', ['male', 'female'], 'Gender: ', true);
+    ?>
+    </div>
+
+
+    Dependent:
+
+    <div class="row">
+    <?php
+    Form::inputText('dFirstName', Type::$Name, 'First Name: ', 'e.g. Mychal', true);
+    Form::inputText('dMiddleName', Type::$Name, 'Middle Name: ', 'e.g. Bacus');
+    Form::inputText('dLastName', Type::$Name, 'Last Name: ', 'e.g. Pejana', true);
+    Form::inputDate('birthday', 'Birthday:', true);
+    ?>
+    </div>
+
+    <div class="row">
+    <?php
+    Form::inputCheckBox('agree', '', true);
     ?>
     </div>
 
