@@ -11,16 +11,20 @@ class Type
     public static $NumberStr = 'NumberStr';
     public static $Password = 'Password';
     public static $Email = 'Email';
-    
+    public static $Date = 'Date';
+    public static $Text = 'Text';
     public static function errMsg($type) : string
     {
         return match($type)
         {
+            //error messages MUST be filled and unique, else there would be problems in error handling
             self::$Email => '*Not a valid email',
             self::$Name => '*Must only contain letters',
             self::$PhoneNumber => '*Not a valid phone number',
-            self::$NumberStr => '',
-            self::$Password => '',
+            self::$NumberStr => '*Must be a number',
+            self::$Password => '*Not a valid password',
+            self::$Date => '*Not a valid date',
+            self::$Text => '*Not a valid text',
         };
     }
     public static function checkValid($val, string $type)
@@ -42,7 +46,14 @@ class Type
             case self::$Password:
                 //not yet implemented
                 return true;
+            
+            case self::$Date:
+                //not yet implemented
+                return true;
 
+            case self::$Text:
+                //not yet implemented
+                return true;
             default:
                 return true;
         }

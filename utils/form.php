@@ -46,23 +46,45 @@ class Form
      * @param string $placeholder the placeholder to display
      * @param bool $required specifies if input is required
      */
-    public static function input(string $id, string $type, string $label='', string $placeholder='', bool $required = false)
+    public static function inputText(string $id, string $type, string $label='', string $placeholder='', bool $required = false)
     {
         self::addSession($id, $type, $required);
     
+        echo "<div class='col'>";
+
         if (!empty($label))
         {
             echo "<label for='{$id}'> {$label} </label> <br>";
         }
     
-        echo "<input type='text' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}' placeholder='{$placeholder}'> <br>";
+        echo "<input class='form-control' type='text' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}' placeholder='{$placeholder}'>";
     
         if($required)
         {
             echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
         }
+
+        echo "</div>";
+    }
+
+    public static function inputDate(string $id, string $label='', bool $required = false)
+    {
+        self::addSession($id, Type::$Date, $required);
+        echo "<div class='col'>";
+
+        if (!empty($label))
+        {
+            echo "<label for='{$id}'> {$label} </label> <br>";
+        }
     
-        echo "<br>";
+        echo "<input class='form-control' type='date' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}'>";
+    
+        if($required)
+        {
+            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
+        }
+
+        echo "</div>";
     }
     public static function insertToDB($tableName, $ids, $isStrings, $conn)
     {
@@ -148,6 +170,7 @@ class Form
     {
         foreach ($_SESSION[self::$SESSION_NAME] as $id => $key)
         {
+            
             if ($id == 'submit' || $id == 'refresh')
             {
                 continue;
@@ -185,8 +208,10 @@ class Form
                 $key['error'] = str_replace('*Required <br>', '', $key['error']);
             }
 
+            
             //update session error
             $_SESSION[self::$SESSION_NAME][$id]['error'] = $key['error'];
+            
         }
     }
     /**
