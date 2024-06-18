@@ -108,5 +108,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 </div>
 </form>
 
-<?php
-?>
+CREATED BY MYCHAL ANDRES B. PEJANA

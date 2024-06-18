@@ -146,3 +146,4 @@ echo renderTable($rows);
 ?>
 
 <a href = 'index.php'> Click to Register Again</a>
+CREATED BY MYCHAL ANDRES B. PEJANA
