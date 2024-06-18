@@ -1,0 +1,22 @@
+$sql = 'create or replace table user (
+                user_id int not null AUTO_INCREMENT,
+                firstName varchar(255), 
+                middleName varchar(255), 
+                lastName varchar(255), 
+                email varchar(255), 
+                birthday varchar(255), 
+                unitNumber varchar(5), 
+                houseNumber varchar(5), 
+                street varchar(50), 
+                village varchar(50), 
+                subdivision varchar(100), 
+                zipCode varchar(10), 
+                country varchar(100), 
+                mobileNumber varchar(11), 
+                gender varchar(6), 
+                dFirstName varchar(255), 
+                dMiddleName varchar(255), 
+                dLastName varchar(255), 
+                dBirthday varchar(255),
+                primary key(user_id)
+                );';

@@ -14,7 +14,7 @@ class Database
 		return $conn;
 	}
 
-	public static function displayTable($conn, $tableName='', $sql='')
+	public static function getRows($conn, $tableName, $sql='')
 	{
 		if ($sql === '')
 		{
@@ -26,7 +26,32 @@ class Database
 		if (!$result)
 		{
 			echo '<br>Query Error:<br>';
-			return 0;
+			exit();
+		}
+
+		$rows = [];
+		while ($row = mysqli_fetch_assoc($result))
+		{
+			$rows[] = $row;
+		}
+
+		mysqli_close($conn);
+		return $rows;
+	}
+
+	public static function displayTable($conn, $tableName, $sql='')
+	{
+		if ($sql === '')
+		{
+			$sql = "select * from $tableName";
+		}
+
+		$result = mysqli_query($conn, $sql);
+
+		if (!$result)
+		{
+			echo '<br>Query Error:<br>';
+			exit();
 		}
 
 		while ($row = mysqli_fetch_assoc($result))

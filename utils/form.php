@@ -51,147 +51,126 @@ class Form
     {
         self::addSession($id, $type, $required);
     
-        echo ($colSpan === "") ? "<div class='col'>" : "<div class='col-$colSpan'>";
+        echo empty($colSpan)    ?   "<div class='col'>" : 
+                                    "<div class='col-$colSpan'>";
+        echo empty($label)      ?   "" : 
+                                    "<label for='{$id}'> {$label} </label> <br>";
 
-        if (!empty($label))
-        {
-            echo "<label for='{$id}'> {$label} </label> <br>";
-        }
+        $type = $type === Type::$Date ? 'date' : 'text';
+
+        echo "<input class='form-control' type='$type' id='$id' name='$id' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}' placeholder='$placeholder'>";
     
-        echo "<input class='form-control' type='text' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}' placeholder='{$placeholder}'>";
-    
-        if($required)
-        {
-            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
-        }
+        echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
 
         echo "</div>";
     }
     
-    public static function inputCheckBox(string $id, string $label='', bool $required = false)
-    {
-        self::addSession($id, Type::$Text, $required);
-        $_SESSION[self::$SESSION_NAME][$id]['content'] = "";
-
-        echo "<div class='col'>";
-
-        if (!empty($label))
-        {
-            echo "<label for='{$id}'> {$label} </label> <br>";
-        }
-
-        echo "<input type='checkbox' id='{$id}' name='{$id}' value='{$id}'>";
-        echo "<label for='$id'>&nbsp;I agree to the terms and conditions</label><br>";
-        
-        if($required)
-        {
-            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
-        }
-
-        echo "</div>";
-    }
-
-    public static function inputDate(string $id, string $label='', bool $required = false)
-    {
-        self::addSession($id, Type::$Date, $required);
-        echo "<div class='col'>";
-
-        if (!empty($label))
-        {
-            echo "<label for='{$id}'> {$label} </label> <br>";
-        }
-    
-        echo "<input class='form-control' type='date' id='{$id}' name='{$id}' value='{$_SESSION[self::$SESSION_NAME][$id]['content']}'>";
-    
-        if($required)
-        {
-            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
-        }
-
-        echo "</div>";
-    }
-    public static function inputRadio(string $id, array $options, string $label='', bool $required = false)
+    public static function inputRadio(string $id, array $options, string $label='', bool $required = false, string $colSpan='')
     {
         self::addSession($id, Type::$Text, $required);
         
-        echo "<div class='col'>";
-
-        if (!empty($label))
-        {
-            echo "<label for='{$id}'> {$label} </label> <br>";
-        }
+        echo empty($colSpan)    ?   "<div class='col'>" : 
+                                    "<div class='col-$colSpan'>";
+        echo empty($label)      ?   "" : 
+                                    "<label for='{$id}'> {$label} </label> <br>";
         
-        $default = isset($_SESSION[self::$SESSION_NAME][$id]['content']) ? $_SESSION[self::$SESSION_NAME][$id]['content'] : "";
+        $default = $_SESSION[self::$SESSION_NAME][$id]['content'];
         
         foreach ($options as $x)
         {
             echo "<input type='radio' name='$id' id='$x' value='$x'";
-            if ($default === $x)
-            {
-                echo " checked>";
-            }
-            else
-            {
-                echo ">";
-            }
-
-            echo "<label for='$x'>" . strtoupper($x) . "</label>&nbsp;&nbsp;&nbsp;&nbsp;";
+            echo $default === $x    ?   " checked" : 
+                                        "";
+            echo "><label for='$x'>" . strtoupper($x) . "</label> &nbsp;&nbsp;&nbsp;&nbsp;";
         }
         echo '<br>';
-        if($required)
-        {
-            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
-        }
+
+        echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
 
         echo "</div>";
     }
-    public static function inputDropDown(string $id, array $options, string $label='', bool $required = false)
+    public static function inputCheckBox(string $id, string $label='', bool $required = false)
+    {
+        self::addSession($id, Type::$Text, $required);
+
+        $_SESSION[self::$SESSION_NAME][$id]['content'] = "";
+
+        echo "<div class='col'>";
+
+        echo empty($label)      ?   "" : 
+                                    "<label for='{$id}'> {$label} </label> <br>";
+
+        echo "<input type='checkbox' id='{$id}' name='{$id}' value='{$id}'>";
+        echo "<label for='$id'>&nbsp;I agree to the terms and conditions</label><br>";
+        
+        echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
+
+        echo "</div>";
+    }
+
+    public static function inputDropDown(string $id, array $options, string $label='', bool $required = false, string $colSpan='')
     {
         self::addSession($id, Type::$Text, $required);
         
-        echo "<div class='col'>";
-
-        if (!empty($label))
-        {
-            echo "<label for='{$id}'> {$label} </label> <br>";
-        }
+        echo empty($colSpan)    ?   "<div class='col'>" : 
+                                    "<div class='col-$colSpan'>";
+        echo empty($label)      ?   "" : 
+                                    "<label for='{$id}'> {$label} </label> <br>";
     
         echo "<select class='form-control' name='$id', id='$id'>";
         
-        $default = isset($_SESSION[self::$SESSION_NAME][$id]['content']) ? $_SESSION[self::$SESSION_NAME][$id]['content'] : "";
+        $default = $_SESSION[self::$SESSION_NAME][$id]['content'];
         
         foreach ($options as $x)
         {
             echo "<option value='$x'";
 
-            if ($default === $x)
-            {
-                echo " selected";
-            }
-
-            if ($x === "")
-            {
-                echo " hidden disabled>Select Country";
-            }
-            else
-            {
-                echo ">$x";
-            }
+            echo $default === $x    ?   " selected" 
+                                        : "";
+            echo $x === ""          ?   " hidden disabled> --Select Country--" 
+                                        : ">$x";
 
             echo "</option> <br>";
-
         }
 
         echo "</select>";
 
-        if($required)
-        {
-            echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
-        }
+        echo "<span style='color: red;'> {$_SESSION[self::$SESSION_NAME][$id]['error']} <br></span>";
 
         echo "</div>";
     }
-    public static function insertToDB($tableName, $ids, $isStrings, $conn)
+    public static function insertAllToDB($tableName, $notIncluded, $conn)
+    {
+        if (self::hasError())
+        {
+            echo '<br>User input has errors<br>';
+            return false;
+        }
+
+        $sql = "insert into $tableName 
+                values(0, ";
+
+        foreach ($_SESSION[self::$SESSION_NAME] as $id => $val)
+        {
+            if (in_array($id, $notIncluded))
+            {
+                continue;
+            }
+
+            $sql .= "'{$val['content']}', ";
+        }
+
+        $sql = substr($sql, 0, -2);
+
+        $sql .= ");";
+        
+        $result = mysqli_query($conn, $sql);
+        mysqli_close($conn);
+
+        return $result;
+    }
+
+    public static function insertToDB($tableName, $ids=[], $isStrings=[], $conn)
     {
         if (self::hasError())
         {
@@ -216,6 +195,7 @@ class Form
                 $sql .= ", ";
             }
         }
+
         $sql .= ");";
 
         $result = mysqli_query($conn, $sql);
@@ -280,7 +260,6 @@ class Form
             {
                 continue;
             }
-
             //check for invalid input
             if (!Type::checkValid($key['content'], $key['type']))
             {
@@ -298,6 +277,7 @@ class Form
             //check for blank input
             if (!$key['required'])
             {
+                $_SESSION[self::$SESSION_NAME][$id]['error'] = $key['error'];
                 continue;
             }
             

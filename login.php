@@ -13,6 +13,7 @@ require_once('misc/misc.php');
 
 <?php
 Form::init();
+PageController::init(true);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -24,12 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         if (!Form::hasError())
         {
             $conn = Database::establishConnection();
-            $ids = ['name', 'number'];
-            //Form::insertToDB('user', $ids, [1, 1], $conn);
-
-            Form::clearSession();
+            
+            Form::insertAllToDB('user', ['submit', 'refresh', 'agree'], $conn);
             
             PageController::setCanAccess(true, 'homepage.php');
+            PageController::setCanAccess(false, 'login.php');
             header("Location: homepage.php");
             exit();
         }
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <div class="row">
     <?php
     Form::inputText('email', Type::$Email, 'Email: ', 'e.g. MychalPejana@gmail.com', true);
-    Form::inputDate('birthday', 'Birthday:', true);
+    Form::inputText('birthday', Type::$Date, 'Birthday:', required:true);
     ?>
     </div>
 
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     Form::inputText('dFirstName', Type::$Name, 'First Name: ', 'e.g. Mychal', true);
     Form::inputText('dMiddleName', Type::$Name, 'Middle Name: ', 'e.g. Bacus');
     Form::inputText('dLastName', Type::$Name, 'Last Name: ', 'e.g. Pejana', true);
-    Form::inputDate('birthday', 'Birthday:', true);
+    Form::inputText('dbirthday', Type::$Date, 'Birthday:', required:true);
     ?>
     </div>
 
